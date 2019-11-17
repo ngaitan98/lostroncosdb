@@ -22,25 +22,30 @@ app.listen(3000, () => {
 });
 
 app.post("/transformaciones", (req, res) => {
-  var bichoLoco = aws.QLDB;
-  createLedger
-    .createLedger("LosTroncosDB", bichoLoco)
+  connectToLedger
+    .createQldbSession()
     .then(success => {
-      findTransformaciones
-        .findTransformaciones()
-        .then(success => {
-          res.send(success.Name);
-        })
-        .catch(error => {
-          res.send(error);
-        });
+      success.executeLambda(txn => {
+        insertDocument
+          .insertDocument(txn, "TRANSFORMACIONES", req.body)
+          .then(success => {
+            console.log(success);
+            res.send(success);
+            connectToLedger.closeQldbSession();
+          })
+          .catch(error => {
+            console.log(error);
+            res.send(error);
+          });
+      });
     })
     .catch(error => {
+      console.log(error);
       res.send(error);
     });
 });
 
-app.post("/empresa", (req, res) => {
+app.post("/empresas", (req, res) => {
   connectToLedger
     .createQldbSession()
     .then(success => {
@@ -65,11 +70,22 @@ app.post("/empresa", (req, res) => {
 });
 
 app.post("/errores", (req, res) => {
-  let newErrores = req.body.errores;
-  insertDocument
-    .insertDocument({}, "ERRORES", newErrores)
+  connectToLedger
+    .createQldbSession()
     .then(success => {
-      res.send(success.Name);
+      success.executeLambda(txn => {
+        insertDocument
+          .insertDocument(txn, "ERRORES", req.body)
+          .then(success => {
+            console.log(success);
+            res.send(success);
+            connectToLedger.closeQldbSession();
+          })
+          .catch(error => {
+            console.log(error);
+            res.send(error);
+          });
+      });
     })
     .catch(error => {
       console.log(error);
