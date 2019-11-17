@@ -115,3 +115,26 @@ app.post("/hijos", (req, res) => {
       res.send(error);
     });
 });
+app.post("/movimientos", (req, res) => {
+  connectToLedger
+    .createQldbSession()
+    .then(success => {
+      success.executeLambda(txn => {
+        insertDocument
+          .insertDocument(txn, "MOVIMIENTOS", req.body)
+          .then(success => {
+            console.log(success);
+            res.send(success);
+            connectToLedger.closeQldbSession();
+          })
+          .catch(error => {
+            console.log(error);
+            res.send(error);
+          });
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      res.send(error);
+    });
+});
