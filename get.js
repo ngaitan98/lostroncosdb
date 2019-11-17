@@ -50,3 +50,4 @@ router.get("/errores", (req, res) => {
       res.send(error);
     });
 });
+module.exports = router;
