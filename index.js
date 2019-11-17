@@ -93,3 +93,26 @@ app.post("/errores", (req, res) => {
       res.send(error);
     });
 });
+app.post("/hijos", (req, res) => {
+  connectToLedger
+    .createQldbSession()
+    .then(success => {
+      success.executeLambda(txn => {
+        insertDocument
+          .insertDocument(txn, "HIJOS", req.body)
+          .then(success => {
+            console.log(success);
+            res.send(success);
+            connectToLedger.closeQldbSession();
+          })
+          .catch(error => {
+            console.log(error);
+            res.send(error);
+          });
+      });
+    })
+    .catch(error => {
+      console.log(error);
+      res.send(error);
+    });
+});
