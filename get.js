@@ -15,7 +15,7 @@ router.get("/:id", (req, res) => {
       let documentWriter = qldbSdk.createQldbWriter()
       util.writeValueAsIon(id,documentWriter)
       txn.executeInline("SELECT * FROM TRANSFORMACIONES AS data WHERE data.id = ?",[documentWriter]).then(success=>{
-        for(const result of results){
+        for(const result of success.getResultList()){
           console.log(result)
           res.send("OK")
         }
