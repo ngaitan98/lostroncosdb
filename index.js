@@ -22,6 +22,7 @@ app.listen(3000, () => {
 });
 
 app.post("/transformaciones", (req, res) => {
+  console.log(req.body);
   connectToLedger
     .createQldbSession()
     .then(success => {
