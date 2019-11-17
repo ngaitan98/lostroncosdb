@@ -14,7 +14,7 @@ router.get("/:id", (req, res) => {
     success.executeLambda((txn) =>{
       let documentWriter = qldbSdk.createQldbWriter()
       util.writeValueAsIon(id,documentWriter)
-      txn.executeInline("SELECT * as bloque FROM TRANSFORMACIONES WHERE bloque.id = ?",[documentWriter]).then(success=>{
+      txn.executeInline("SELECT * AS bloque FROM TRANSFORMACIONES WHERE bloque.id = ?",[documentWriter]).then(success=>{
         res.send(success.getResultList().length == 1?success.getResultList()[0]:"Error");
       }).catch(error=>{
         console.log(error);
