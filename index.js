@@ -1,5 +1,4 @@
 //import * as createLedger from './dist/CreateLedger.js';
-const createLedger = require("./dist/CreateLedger.js");
 const insertDocument = require("./dist/InsertDocument.js");
 const express = require("express");
 const bodyParser = require("body-parser");
